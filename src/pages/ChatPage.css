@@ -1,0 +1,28 @@
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    /* position: relative; */
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.profile {
+    margin: 30px;
+}
+
+.messages_box {
+    margin-left: 30px;
+    margin-right: 30px;
+    overflow-y: auto;
+}
+
+.message_box {
+    margin: 30px;
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 10px;
+    /* position: sticky; */
+    /* bottom: 0; */
+    /* width: calc(100% - 60px); */
+}
