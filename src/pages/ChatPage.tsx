@@ -1,35 +1,46 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import "./ChatPage.css";
-import type { Message } from "../message";
+import type { UserData, Message } from "../message";
 import { Config } from "../config";
 
 export default function ChatPage() {
     const navigate = useNavigate();
     const [name, setName] = React.useState(sessionStorage.getItem("name"));
+    const [color, setColor] = React.useState(sessionStorage.getItem("color"));
     const [messages, setMessages] = React.useState<Message[]>([]);
+    const userList = React.useRef<UserData[]>([]);
     const ws = React.useRef<WebSocket | null>(null);
 
     useEffect(() => {
-        if (name == null) {
+        if (name == null || color == null) {
             useEffect(() => {
                 navigate("/");
             });
             return;
         }
-    }, [name]);
+    }, [name, color]);
 
     useEffect(() => {
-        ws.current = new WebSocket(`${Config.IP}?name=${name}`);
+        ws.current = new WebSocket(`${Config.IP}?name=${name}&color=${color?.substring(1)}`);
 
         ws.current.addEventListener("open", (e) => {
             
         });
 
         ws.current.addEventListener("message", (e) => {
-            console.log(e.data);
-            setMessages((m) => [...m, JSON.parse(e.data)]);
+            // console.log(e.data);
+            const data = JSON.parse(e.data);
+            if (data.type == "text") {
+                // console.log(userList);
+                const user = userList.current.find((u) => u.id == data.source);
+                data.source = <span style={{ color: `#${user?.color}` }}>{user?.name} [{user?.id}]</span>;
+                setMessages((m) => [...m, data]);
+            }
+            else if (data.type == "user_list")  {
+                userList.current = data.content;
+            }
         });
 
         return () => ws.current?.close();
@@ -50,6 +61,7 @@ export default function ChatPage() {
             <div className="profile">Tu esti {name}</div>
             <div className="messages_box">
                 {messages.map((m) => {
+                    // console.log(m.source);
                     return <div>{m.source}: {m.content}</div>;
                 })}
             </div>

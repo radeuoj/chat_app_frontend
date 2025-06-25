@@ -6,8 +6,8 @@ export default function LoginPage() {
 
     function handleLogin(data: FormData) {
         if (data.get("name") == "") return
-
         sessionStorage.setItem("name", data.get("name") as string);
+        sessionStorage.setItem("color", data.get("color") as string);
         navigate("/chat");
     }
 
@@ -15,7 +15,9 @@ export default function LoginPage() {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        height: "100vh",
         alignItems: "center",
+        justifyContent: "center",
     }}>
         <div>Login here</div>
         <form action={handleLogin} style={{
@@ -24,7 +26,11 @@ export default function LoginPage() {
             gap: "20px",
             alignItems: "center",
         }}>
-            <input name="name" defaultValue={sessionStorage.getItem("name") || ""} placeholder="Nume" />
+            <div><input name="name" defaultValue={sessionStorage.getItem("name") || ""} placeholder="Nume" /></div>
+            <div>
+                <input name="color" type="color" style={{ margin: "0.4rem" }} defaultValue={sessionStorage.getItem("color") || "#000000"} />
+                <label htmlFor="color">Culoare preferata</label>
+            </div>
             <button>Go to chat!</button>
         </form>
     </div>;
