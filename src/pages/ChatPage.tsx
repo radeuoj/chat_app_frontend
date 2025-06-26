@@ -63,11 +63,11 @@ export default function ChatPage() {
                 {messages.map((m) => {
                     // console.log(m.source);
                     return <div>{m.source}: {m.content}</div>;
-                })}
+                }).reverse()}
             </div>
-            <form className="message_box" action={handleMessageSend}>
-                <input name="message" placeholder="Scrie ceva..."></input>
-                <button>Trimite</button>
+            <form className="message_box" action={handleMessageSend} autoComplete="nope">
+                <input type="text" name="message" placeholder="Scrie ceva..."></input>
+                <button id="send_button" onFocus={(e) => e.relatedTarget && (e.relatedTarget as HTMLElement).focus()}>Trimite</button>
             </form>
         </div>
     );
